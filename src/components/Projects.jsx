@@ -50,7 +50,7 @@ const neximproveProject = {
   decisions: 'Adopted TypeScript interfaces for strict API contract validation, reusable modular component architecture to eliminate duplication, and standardized state handling for complex 2FA / OTP auth workflows.',
   challenges: 'Managing multi-portal state synchronization, persistent auth states across page refreshes, and staging environment validation for enterprise API integrations.',
   tech: ['React.js', 'TypeScript', 'Tailwind CSS', 'REST APIs', 'Agile/Scrum', 'Git', 'UAT', 'Azure', '2FA'],
-  certificateUrl: 'https://drive.google.com/file/d/1573CNFDEyrAhnZKRcAMIuUUnu0Fe5pDC/view?usp=sharing',
+  certificateUrl: 'https://drive.google.com/file/d/10pOkckKIDbU2Q05l46jiyTiSbAG0G8FR/view',
   scopeLabel: 'ARCHITECTURE & SCOPE',
 }
 
@@ -84,7 +84,7 @@ const neighbourhoodProject = {
   challenges: 'Coordinating request state changes across users while keeping the experience clear and responsive.',
   tech: ['React.js', 'Redux', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'Socket.io', 'REST APIs', 'JWT', 'Tailwind CSS'],
   image: '/image.png',
-  liveUrl: 'http://localhost:5173/login',
+  liveUrl: 'https://neighbourhood-helper.netlify.app/',
   githubUrls: [
     { label: 'Frontend', url: 'https://github.com/sakshisingh62/neighbouhoodhelper-F' },
     { label: 'Backend', url: 'https://github.com/sakshisingh62/neighbourhoodhelper-B' },
