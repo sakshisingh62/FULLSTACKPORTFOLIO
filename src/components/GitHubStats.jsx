@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { FiGithub, FiStar, FiGitBranch, FiGitPullRequest } from 'react-icons/fi';
 import fallbackProfile from '../data/githubProfile.json';
 
-export default function GitHubStats({ username = '24-Harshdeep' }) {
+export default function GitHubStats({ username = 'sakshisingh62' }) {
   const [stats, setStats] = useState({
     repos: fallbackProfile.public_repos,
     followers: fallbackProfile.followers,
     following: fallbackProfile.following,
     stars: fallbackProfile.totalStars,
-    forks: 2,
+    forks: 0,
     mergedPRs: fallbackProfile.merged_prs,
   });
 
@@ -31,14 +31,14 @@ export default function GitHubStats({ username = '24-Harshdeep' }) {
             : fallbackProfile.totalStars;
           const totalForks = Array.isArray(reposData)
             ? reposData.reduce((acc, repo) => acc + (repo.forks_count || 0), 0)
-            : 2;
+            : 0;
 
           setStats({
             repos: userData ? userData.public_repos : fallbackProfile.public_repos,
             followers: userData ? userData.followers : fallbackProfile.followers,
             following: userData ? userData.following : fallbackProfile.following,
             stars: totalStars || fallbackProfile.totalStars,
-            forks: totalForks || 2,
+            forks: totalForks,
             mergedPRs: prsData && typeof prsData.total_count === 'number' ? prsData.total_count : fallbackProfile.merged_prs
           });
         }

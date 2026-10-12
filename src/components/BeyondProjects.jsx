@@ -1,55 +1,48 @@
 import React from 'react'
-import { FiExternalLink, FiAward, FiCpu } from 'react-icons/fi'
+import { FiAward, FiBriefcase } from 'react-icons/fi'
 
 export default function BeyondProjects() {
   const items = [
     {
       icon: <FiAward size={22} />,
-      title: 'GirlScript Summer of Code (GSSoC) 2026',
-      badge: 'Global Rank #1,493',
-      date: 'May 2026 – Aug 2026',
-      desc: 'Participated in GirlScript Summer of Code (GSSoC 2026) and successfully completed the program as an active open-source contributor.',
+      title: 'Jury Member',
+      badge: 'Navgurukul Experiences',
+      date: 'Community Experience',
+      desc: 'Supported student project evaluation and helped align project architectures with industry standards.',
       bullets: [
-        'Contributed frontend features, UI bug fixes, component refactoring, and multi-language UI localization across active open-source repositories.',
-        'Collaborated with global open-source maintainers via GitHub PR reviews, issue discussions, and version control best practices.',
-        'Achieved a Global Rank of #1,493 and earned official contributor recognition from the GirlScript Foundation.',
+        'Standardized evaluation metrics for consistent project reviews.',
+        'Provided technical feedback to more than 50 students.',
+        'Aligned project architectures with industry standards.',
       ],
-      links: [
-        { url: 'https://gssoc.girlscript.org/profile/6cfd5893-9684-4568-869b-b2583dac461f', text: 'View GSSoC Profile' },
-        { url: 'https://drive.google.com/file/d/1PX5a8u1xOJLLbQO5ICWpXVuAKQU4QzNh/view?usp=sharing', text: 'Certificate' },
-      ],
-      tags: ['GSSoC 2026', 'Rank #1493', 'Open Source', 'Git & GitHub', 'React', 'PR Contributions', 'Localization'],
+      tags: ['Evaluation Metrics', 'Technical Feedback', '50+ Students'],
     },
     {
-      icon: <FiCpu size={22} />,
-      title: 'GirlScript Summer of Code (GSSoC) 2026 – AI Track',
-      badge: 'Smartly Labs AI Track',
-      date: 'July 2026 – August 2026',
-      desc: 'Contributed to the GSSoC 2026 AI Track hosted on Smartly Labs in collaboration with GS Labs, building AI developer tools and exploring agentic open-source workflows.',
+      icon: <FiBriefcase size={22} />,
+      title: 'Facility In-Charge',
+      badge: 'Navgurukul Experiences',
+      date: 'Community Experience',
+      desc: 'Managed campus logistics and administrative workflows with a focus on operational efficiency.',
       bullets: [
-        'Built GitFix, an AI developer assistant for debugging, error analysis, and Git/GitHub troubleshooting using Smartly Labs.',
-        'Developed an AI Internship Researcher and explored AI agent development through open-source projects.',
+        'Optimized campus logistics and administrative processes.',
+        'Spearheaded facility management initiatives.',
+        'Improved day-to-day operational efficiency.',
       ],
-      links: [
-        { url: 'https://infra.smartlylabs.ai/profile', text: 'Smartly Labs Profile' },
-        { url: 'https://drive.google.com/file/d/1jkHj33mH-d1dcBB1dMoGk3-CHQRBSnZt/view?usp=sharing', text: 'Certificate' },
-      ],
-      tags: ['GSSoC AI Track', 'Smartly Labs', 'GitFix', 'AI Agents', 'Open Source'],
+      tags: ['Campus Logistics', 'Administration', 'Operations'],
     },
   ]
 
   return (
     <section id="beyond" className="beyond-section">
       <div className="container">
-        <span className="section-label">Open Source & Community</span>
-        <h2 className="section-title">Open Source Contributions</h2>
+        <span className="section-label">Community Experience</span>
+        <h2 className="section-title">Navgurukul Experiences</h2>
         <p className="section-subtitle">
-          Open-source program completion, global rank achievements, AI track contributions, and verified certificates.
+          Leadership and operations experience supporting student evaluation and campus workflows.
         </p>
 
         <div className="projects-mini-grid">
-          {items.map((item, idx) => (
-            <div key={idx} className="mini-card" style={{ flexDirection: 'column', justifyContent: 'space-between' }}>
+          {items.map((item) => (
+            <div key={item.title} className="mini-card" style={{ flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <div style={{ color: 'var(--accent-cyan)' }}>{item.icon}</div>
@@ -69,38 +62,15 @@ export default function BeyondProjects() {
                   {item.desc}
                 </p>
 
-                {item.bullets && (
-                  <ul style={{ paddingLeft: '1.2rem', marginBottom: '1.25rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                    {item.bullets.map((b, i) => (
-                      <li key={i} style={{ marginBottom: '0.4rem', lineHeight: 1.5 }}>{b}</li>
-                    ))}
-                  </ul>
-                )}
+                <ul style={{ paddingLeft: '1.2rem', marginBottom: '1.25rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  {item.bullets.map((bullet) => (
+                    <li key={bullet} style={{ marginBottom: '0.4rem', lineHeight: 1.5 }}>{bullet}</li>
+                  ))}
+                </ul>
               </div>
 
-              <div>
-                <div className="cs-pills" style={{ marginBottom: item.links ? '1rem' : '0' }}>
-                  {item.tags.map((t) => (
-                    <span key={t} className="tech-pill">{t}</span>
-                  ))}
-                </div>
-
-                {item.links && (
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    {item.links.map((l, i) => (
-                      <a
-                        key={i}
-                        href={l.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline"
-                        style={{ fontSize: '0.8rem', padding: '0.45rem 0.75rem', flex: 1, textAlign: 'center', justifyContent: 'center' }}
-                      >
-                        {l.text} <FiExternalLink size={13} style={{ marginLeft: '4px' }} />
-                      </a>
-                    ))}
-                  </div>
-                )}
+              <div className="cs-pills">
+                {item.tags.map((tag) => <span key={tag} className="tech-pill">{tag}</span>)}
               </div>
             </div>
           ))}
@@ -109,5 +79,3 @@ export default function BeyondProjects() {
     </section>
   )
 }
-
-

@@ -1,7 +1,6 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { FiArrowRight, FiExternalLink, FiBriefcase, FiBookOpen, FiCode, FiMapPin, FiMail } from 'react-icons/fi'
-import profileImg from '../assets/image.jpeg'
+import { motion as Motion } from 'framer-motion'
+import { FiArrowRight, FiExternalLink, FiBriefcase, FiBookOpen, FiCode, FiMail } from 'react-icons/fi'
 
 export default function Hero() {
   const containerVariants = {
@@ -28,36 +27,36 @@ export default function Hero() {
     <section id="hero" className="hero-section">
       <div className="hero-glow-bg" />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <motion.div
+        <Motion.div
           className="hero-grid"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <div className="hero-left">
-            <motion.div variants={itemVariants} className="hero-badge-tag">
+            <Motion.div variants={itemVariants} className="hero-badge-tag">
               <span className="status-dot-pulse" />
-              Open to Software Engineering, Full Stack & AI/ML Opportunities
-            </motion.div>
+              Open to Frontend & Full-Stack Developer Opportunities
+            </Motion.div>
 
-            <motion.h1 variants={itemVariants} className="hero-title">
-              HARSHDEEP KAUR
-            </motion.h1>
+            <Motion.h1 variants={itemVariants} className="hero-title">
+              SAKSHI
+            </Motion.h1>
 
-            <motion.div variants={itemVariants} className="hero-subtitle">
-              Full Stack & AI Engineer building intelligent web applications.
-            </motion.div>
+            <Motion.div variants={itemVariants} className="hero-subtitle">
+              Full-Stack Web Developer building user-friendly web applications.
+            </Motion.div>
 
-            <motion.p variants={itemVariants} className="hero-bio">
-              I build responsive frontend interfaces, robust backend APIs, database architectures, and autonomous AI agents using React, Next.js, TypeScript, Node.js, MongoDB, Smartly Labs AI, and modern web technologies.
-            </motion.p>
+            <Motion.p variants={itemVariants} className="hero-bio">
+              I build responsive web applications with MongoDB, Express.js, React, Next.js, and Node.js. I enjoy turning ideas into functional products and collaborating on practical solutions.
+            </Motion.p>
 
-            <motion.div variants={itemVariants} className="hero-ctas">
+            <Motion.div variants={itemVariants} className="hero-ctas">
               <a href="#work" className="btn btn-primary">
                 View My Work <FiArrowRight size={16} />
               </a>
               <a
-                href="/Harshdeep_FullStackDeveloper_Resume.pdf"
+                href="/Sakshi_FullStack_resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
@@ -65,25 +64,22 @@ export default function Hero() {
                 Resume <FiExternalLink size={16} />
               </a>
               <a
-                href="mailto:harshdeepkaur1208@gmail.com"
+                href="mailto:singhsakshi0365@gmail.com"
                 className="hero-email-quick"
               >
-                <FiMail size={14} /> harshdeepkaur1208@gmail.com
+                <FiMail size={14} /> singhsakshi0365@gmail.com
               </a>
-            </motion.div>
+            </Motion.div>
           </div>
 
-          <motion.div variants={itemVariants} className="hero-right">
+          <Motion.div variants={itemVariants} className="hero-right">
             <div className="hero-photo-frame">
               <div className="photo-container">
                 <img
-                  src={profileImg}
-                  alt="Harshdeep Kaur"
+                  src="/sakshi.jpg"
+                  alt="Sakshi"
                   className="hero-photo-img"
                 />
-                <div className="photo-location-badge">
-                  <FiMapPin size={12} style={{ color: 'var(--accent-cyan)' }} /> Assam, India
-                </div>
               </div>
 
               <div className="status-card-header">
@@ -91,18 +87,19 @@ export default function Hero() {
               </div>
 
               <div className="cs-pills" style={{ marginBottom: '1.25rem' }}>
-                <span className="tech-pill">React</span>
+                <span className="tech-pill">React.js</span>
                 <span className="tech-pill">Next.js</span>
                 <span className="tech-pill">TypeScript</span>
                 <span className="tech-pill">Node.js</span>
                 <span className="tech-pill">MongoDB</span>
+                <span className="tech-pill">Azure</span>
               </div>
 
               <div className="status-item">
                 <FiBookOpen className="status-icon" size={18} />
                 <div>
-                  <div className="status-label">BCA · 3rd Year</div>
-                  <div className="status-val">Eternal University (2025–2027)</div>
+                  <div className="status-label">Bachelor of Computer Application</div>
+                  <div className="status-val">Eternal University (July 2024 – Present)</div>
                 </div>
               </div>
 
@@ -110,15 +107,14 @@ export default function Hero() {
                 <FiBriefcase className="status-icon" size={18} />
                 <div>
                   <div className="status-label">Neximprove</div>
-                  <div className="status-val">Frontend Developer Intern (Jan 2026 – Jul 2026)</div>
+                  <div className="status-val">Frontend Developer Intern · 6 months completed</div>
                 </div>
               </div>
 
               <div className="status-item">
                 <FiBriefcase className="status-icon" size={18} />
                 <div>
-                  <div className="status-label">Axemata Modas</div>
-                  <div className="status-val">Web Developer / Full Stack Intern (Jul 2026 – Sep 2026)</div>
+                  <div className="status-val">Full Stack Developer Intern · 2 months – Present</div>
                 </div>
               </div>
 
@@ -132,8 +128,8 @@ export default function Hero() {
                 </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </Motion.div>
+        </Motion.div>
       </div>
     </section>
   )

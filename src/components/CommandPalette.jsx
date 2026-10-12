@@ -1,7 +1,7 @@
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { useEffect, useState, useCallback } from 'react';
-import { FiGithub, FiLinkedin, FiMail, FiFileText, FiCode, FiAward, FiUser, FiX } from 'react-icons/fi';
+import { FiGithub, FiMail, FiFileText, FiCode, FiAward, FiUser, FiX } from 'react-icons/fi';
 
 const commands = [
   { id: 'about', label: 'About Me', icon: FiUser, action: () => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }) },
@@ -9,8 +9,7 @@ const commands = [
   { id: 'projects', label: 'Projects', icon: FiFileText, action: () => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'certs', label: 'Certifications', icon: FiAward, action: () => document.getElementById('certifications')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'contact', label: 'Contact', icon: FiMail, action: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) },
-  { id: 'github', label: 'GitHub Profile', icon: FiGithub, action: () => window.open('https://github.com/24-Harshdeep', '_blank') },
-  { id: 'linkedin', label: 'LinkedIn', icon: FiLinkedin, action: () => window.open('https://www.linkedin.com/in/harshdeep-kaur-58b5a4320/', '_blank') },
+  { id: 'github', label: 'GitHub Profile', icon: FiGithub, action: () => window.open('https://github.com/sakshisingh62', '_blank') },
 ];
 
 export default function CommandPalette() {

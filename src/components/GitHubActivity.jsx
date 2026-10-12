@@ -6,7 +6,7 @@ import fallbackProfile from '../data/githubProfile.json'
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export default function GitHubActivity({ username = '24-Harshdeep' }) {
+export default function GitHubActivity({ username = 'sakshisingh62' }) {
   const { darkMode } = useStore()
   const [profile, setProfile] = useState(fallbackProfile)
   const [repos, setRepos] = useState([])
@@ -36,16 +36,19 @@ export default function GitHubActivity({ username = '24-Harshdeep' }) {
         const prsData = prsRes && prsRes.ok ? await prsRes.json() : null
 
         try {
-          const cRes = await fetch(`https://github-contributions.vercel.app/api/v1/${username}`)
+          const cRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
           if (cRes.ok) {
             const cJson = await cRes.json()
             if (cJson && cJson.contributions && cJson.contributions.length > 0) {
-              const sorted = [...cJson.contributions].sort((a, b) => new Date(a.date) - new Date(b.date))
+              const today = new Date().toISOString().slice(0, 10)
+              const sorted = [...cJson.contributions]
+                .filter((day) => day.date <= today)
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
               const pastYear = sorted.slice(-367)
               if (isMounted) {
                 setDaysData(pastYear)
                 const sum = pastYear.reduce((acc, curr) => acc + (curr.count || 0), 0)
-                if (sum > 0) setTotalContribs(sum)
+                setTotalContribs(sum)
               }
             }
           }
@@ -70,28 +73,12 @@ export default function GitHubActivity({ username = '24-Harshdeep' }) {
     return () => { isMounted = false }
   }, [username])
 
-  const languageCounts = useMemo(() => {
-    const counts = {}
-    repos.forEach((repo) => {
-      if (repo.language) {
-        counts[repo.language] = (counts[repo.language] || 0) + 1
-      }
-    })
-    return counts
-  }, [repos])
-
-  const topLanguages = useMemo(() => {
-    return Object.entries(languageCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-  }, [languageCounts])
-
   const calculatedStars = useMemo(() => {
     return repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0)
   }, [repos])
 
-  const publicReposCount = profile?.public_repos || repos.length || 48
-  const displayStars = calculatedStars > 0 ? calculatedStars : 5
+  const publicReposCount = profile?.public_repos ?? repos.length
+  const displayStars = calculatedStars || profile?.totalStars || 0
 
   const filteredDaysData = useMemo(() => {
     if (!daysData || daysData.length === 0) return []
@@ -101,10 +88,10 @@ export default function GitHubActivity({ username = '24-Harshdeep' }) {
 
   const topActiveProjects = useMemo(() => {
     const defaultRepos = [
-      { name: '24-Harshdeep/ai-career-platform', type: 'Push', date: '2026' },
-      { name: '24-Harshdeep/ChatBot-FullStack-', type: 'Push', date: '2025' },
-      { name: '24-Harshdeep/Zaikahub', type: 'Push', date: '2025' },
-      { name: '24-Harshdeep/Portfolio', type: 'Push', date: '2026' },
+      { name: 'sakshisingh62/sakshi-singh', type: 'Push', date: 'Active' },
+      { name: 'sakshisingh62/my-portfolio', type: 'Push', date: 'Active' },
+      { name: 'sakshisingh62/project1', type: 'Push', date: 'Active' },
+      { name: 'sakshisingh62/ecommerece-site', type: 'Push', date: 'Active' },
     ]
 
     const seenNames = new Set()
@@ -598,7 +585,7 @@ export default function GitHubActivity({ username = '24-Harshdeep' }) {
                 { name: 'Node.js & Express.js (REST APIs)', category: 'Backend API', percent: 25 },
                 { name: 'TypeScript & Next.js', category: 'Frontend / SaaS', percent: 15 },
                 { name: 'MongoDB & Database Models', category: 'Database', percent: 10 },
-                { name: 'Smartly Labs AI Agents', category: 'AI Developer Tools', percent: 5 },
+                { name: 'Git & GitHub', category: 'Developer Workflow', percent: 5 },
               ].map((tech) => (
                 <div key={tech.name}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.825rem', marginBottom: '0.25rem', fontWeight: 600 }}>

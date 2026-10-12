@@ -1,39 +1,30 @@
 import React from 'react'
-import { FiExternalLink, FiBriefcase } from 'react-icons/fi'
 
 export default function Experience() {
   const experiences = [
     {
       company: 'Neximprove',
       role: 'Frontend Developer Intern',
-      period: 'Jan 2026 – Jul 2026',
-      type: 'Product Engineering Internship',
-      certificateUrl: 'https://drive.google.com/file/d/1573CNFDEyrAhnZKRcAMIuUUnu0Fe5pDC/view?usp=sharing',
-      description: 'Worked inside an existing software product codebase collaborating with engineering teams on SaaS user interfaces and REST API integrations.',
+      period: '6 Months · Completed',
+      description: 'Worked with Next.js to develop responsive web applications and UI components.',
       bullets: [
-        'Sales UI & Broker Portal: Developed and refined responsive interfaces, reusable UI components, and portal functionality using React, TypeScript, and Tailwind CSS.',
-        'Pricing Pages & Onboarding: Implemented responsive page layouts, UI debugging, and SEO optimizations across public onboarding flows.',
-        'Learning Portal & Course Management: Contributed to course creation workflows, rich-text editing, Markdown support, feedback styling, and admin controls.',
-        'Authentication & Security: Worked on two-factor authentication (2FA), OTP generation, authentication issues, and fixing page reload behavior after refresh.',
-        'Customer 360 & Gateway QA: Assisted with Customer 360 UI implementation, documentation, and performed QA across sandbox/staging environments.',
-        'Database & Integration: Worked with Azure database functionality, data retrieval, Git pull requests, sprint tasks, UAT testing, and product demo materials.',
+        'Developed responsive web applications using Next.js.',
+        'Built and refined reusable UI components.',
+        'Certificate available as referenced in the resume.',
       ],
-      tags: ['React.js', 'TypeScript', 'Tailwind CSS', 'REST APIs', 'Agile/Scrum', 'Git', 'UAT', 'Azure', '2FA'],
+      tags: ['Next.js', 'React.js', 'Responsive UI', 'UI Components'],
     },
     {
-      company: 'Axemata Modas',
-      role: 'Web Developer / Full Stack Intern',
-      period: 'Jul 2026 – Sep 2026',
-      type: 'Full-Stack Internship',
-      certificateUrl: 'https://drive.google.com/file/d/1IpNHrhQm-cHrD1kcxBwhyVuk2jRDoYPz/view',
-      lorUrl: 'https://drive.google.com/file/d/1F40hMleezsCwpPg2zc0Ae49j_nJuwvFE/view',
-      description: 'Engineering a full-stack e-commerce platform and administrative management workflow.',
+      company: 'Neximprove',
+      role: 'Full Stack Developer Intern',
+      period: '2 Months · Present',
+      description: 'Currently working across frontend and backend development.',
       bullets: [
-        'Architected MERN/Next.js stack application with separated storefront and admin workflow APIs.',
-        'Designed MongoDB document schemas, indexing strategies, and secure RESTful endpoints in Node.js & Express.',
-        'Implemented authentication flow, product inventory management, order processing, and media management.',
+        'Contributing to frontend development tasks.',
+        'Contributing to backend development tasks.',
+        'Collaborating to turn product ideas into functional projects.',
       ],
-      tags: ['Next.js', 'React', 'Node.js', 'Express.js', 'MongoDB', 'REST APIs', 'TypeScript'],
+      tags: ['Frontend', 'Backend', 'Full Stack Development'],
     },
   ]
 
@@ -41,61 +32,32 @@ export default function Experience() {
     <section id="experience" className="experience-section">
       <div className="container">
         <span className="section-label">Professional Background</span>
-        <h2 className="section-title">Industry & Engineering Experience</h2>
+        <h2 className="section-title">Experience</h2>
         <p className="section-subtitle">
-          Hands-on development experience inside real product codebases and full-stack software architectures.
+          Frontend and full-stack development experience at Neximprove.
         </p>
 
         <div className="experience-list">
-          {experiences.map((exp, idx) => (
-            <div key={idx} className="exp-card">
+          {experiences.map((experience) => (
+            <div key={experience.role} className="exp-card">
               <div className="exp-header">
                 <div>
-                  <h3 className="exp-role">{exp.role}</h3>
-                  <div className="exp-company">{exp.company}</div>
+                  <h3 className="exp-role">{experience.role}</h3>
+                  <div className="exp-company">{experience.company}</div>
                 </div>
-                <span className="exp-period">{exp.period}</span>
+                <span className="exp-period">{experience.period}</span>
               </div>
 
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                {exp.description}
+                {experience.description}
               </p>
 
               <ul className="exp-bullets">
-                {exp.bullets.map((b, i) => (
-                  <li key={i}>{b}</li>
-                ))}
+                {experience.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
               </ul>
 
-              <div className="cs-pills" style={{ marginTop: '1.25rem', marginBottom: (exp.certificateUrl || exp.lorUrl) ? '1.25rem' : '0' }}>
-                {exp.tags.map((t) => (
-                  <span key={t} className="tech-pill">{t}</span>
-                ))}
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                {exp.certificateUrl && (
-                  <a
-                    href={exp.certificateUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.85rem', padding: '0.45rem 0.95rem' }}
-                  >
-                    View Certificate <FiExternalLink size={14} />
-                  </a>
-                )}
-                {exp.lorUrl && (
-                  <a
-                    href={exp.lorUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline"
-                    style={{ fontSize: '0.85rem', padding: '0.45rem 0.95rem' }}
-                  >
-                    View LOR <FiExternalLink size={14} />
-                  </a>
-                )}
+              <div className="cs-pills" style={{ marginTop: '1.25rem' }}>
+                {experience.tags.map((tag) => <span key={tag} className="tech-pill">{tag}</span>)}
               </div>
             </div>
           ))}

@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion as Motion, AnimatePresence } from 'framer-motion'
 
 export default function SignatureIntro({ onComplete }) {
-  const [visible, setVisible] = useState(true)
-  const [exiting, setExiting] = useState(false)
-
-  useEffect(() => {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return true
     const urlParams = new URLSearchParams(window.location.search)
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reducedMotion || urlParams.get('skipIntro') === 'true') {
-      setVisible(false)
-      onComplete?.()
-      return undefined
-    }
-
-    const timer = window.setTimeout(() => finish(), 3400)
-    return () => window.clearTimeout(timer)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches && urlParams.get('skipIntro') !== 'true'
+  })
+  const [exiting, setExiting] = useState(false)
 
   const finish = () => {
     if (exiting) return
@@ -27,6 +18,16 @@ export default function SignatureIntro({ onComplete }) {
     }, 450)
   }
 
+  useEffect(() => {
+    if (!visible) {
+      onComplete?.()
+      return undefined
+    }
+
+    const timer = window.setTimeout(() => finish(), 3400)
+    return () => window.clearTimeout(timer)
+  }, [visible]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!visible) return null
 
   // Swoop flourish Bezier curve matching reference script:
@@ -36,12 +37,12 @@ export default function SignatureIntro({ onComplete }) {
   return (
     <AnimatePresence>
       {!exiting && (
-        <motion.div
+        <Motion.div
           className="signature-overlay"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.99 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          aria-label="Harshdeep Kaur signature intro"
+          aria-label="Sakshi signature intro"
         >
           <button className="signature-skip" onClick={finish} aria-label="Skip signature intro">
             Skip <span aria-hidden="true">→</span>
@@ -84,7 +85,7 @@ export default function SignatureIntro({ onComplete }) {
                 DEV BY
               </text>
 
-              {/* 2. Signature Name ("Harshdeep Kaur") */}
+              {/* 2. Signature Name ("Sakshi") */}
               <g filter="url(#neonBlueGlow)">
                 {/* Stroke animation reveal */}
                 <text
@@ -101,7 +102,7 @@ export default function SignatureIntro({ onComplete }) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  Harshdeep Kaur
+                  Sakshi
                 </text>
 
                 {/* White body fill-in */}
@@ -115,7 +116,7 @@ export default function SignatureIntro({ onComplete }) {
                   fontSize="180px"
                   fill="#ffffff"
                 >
-                  Harshdeep Kaur
+                  Sakshi
                 </text>
               </g>
 
@@ -131,7 +132,7 @@ export default function SignatureIntro({ onComplete }) {
               />
             </svg>
           </div>
-        </motion.div>
+        </Motion.div>
       )}
     </AnimatePresence>
   )

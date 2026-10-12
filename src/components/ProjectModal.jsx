@@ -166,7 +166,18 @@ export default function ProjectModal() {
               LOR Link <FiExternalLink size={16} />
             </a>
           )}
-          {selectedProject.githubUrl && (
+          {selectedProject.githubUrls?.map((link) => (
+            <a
+              key={link.url}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline"
+            >
+              {link.label} GitHub <FiGithub size={16} />
+            </a>
+          ))}
+          {!selectedProject.githubUrls && selectedProject.githubUrl && (
             <a
               href={selectedProject.githubUrl}
               target="_blank"

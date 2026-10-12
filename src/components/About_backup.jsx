@@ -16,7 +16,7 @@ export default function About() {
       </p>
 
       <div className="actions">
-        <a className="btn" href="/assets/Harshdeep_Kaur_Resume.pdf" download>
+        <a className="btn" href="/Sakshi_FullStack_resume.pdf" download>
           Download Resume
         </a>
       </div>

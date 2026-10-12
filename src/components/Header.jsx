@@ -19,7 +19,7 @@ export default function Header() {
       <div className="container nav-container">
         <a href="#hero" className="brand-mark">
           <span className="brand-dot" />
-          HARSHDEEP
+          SAKSHI
         </a>
 
         <ul className="nav-links">
@@ -36,7 +36,7 @@ export default function Header() {
           <DarkModeToggle />
 
           <a
-            href="/Harshdeep_FullStackDeveloper_Resume.pdf"
+            href="/Sakshi_FullStack_resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline btn-sm"
@@ -72,7 +72,7 @@ export default function Header() {
             <DarkModeToggle />
           </div>
           <a
-            href="/Harshdeep Resume.pdf"
+            href="/Sakshi_FullStack_resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"

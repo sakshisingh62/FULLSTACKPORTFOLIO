@@ -3,20 +3,20 @@ import React from 'react'
 export default function ProofStrip() {
   const proofs = [
     {
-      label: 'REAL PRODUCT EXPERIENCE',
-      value: 'Neximprove Internship',
+      label: 'FRONTEND EXPERIENCE',
+      value: 'Neximprove · 6 months',
     },
     {
-      label: 'FULL-STACK PROJECT',
-      value: 'Axemata Modas Internship',
+      label: 'FULL-STACK EXPERIENCE',
+      value: 'Neximprove · 2 months present',
     },
     {
-      label: 'OPEN SOURCE',
-      value: 'GSSoC 2026 Contributor',
+      label: 'COMMUNITY EXPERIENCE',
+      value: 'Navgurukul Jury Member',
     },
     {
-      label: 'AI / DEVELOPER TOOLS',
-      value: 'GitFix & Researcher',
+      label: 'FEATURED PROJECT',
+      value: 'Neighbourhood Helper',
     },
   ]
 

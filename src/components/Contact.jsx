@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FiMail, FiLinkedin, FiGithub, FiFileText, FiSend } from 'react-icons/fi'
+import { FiMail, FiFileText, FiGithub, FiLinkedin, FiSend } from 'react-icons/fi'
 
 export default function Contact() {
   const [success, setSuccess] = useState(false)
@@ -56,33 +56,33 @@ export default function Contact() {
           </span>
           <h2 className="contact-title">Let's build something.</h2>
           <p className="contact-sub">
-            I'm currently exploring Software Engineering, Full Stack Developer, and AI/ML Engineer opportunities.
+            I'm currently seeking internship opportunities in frontend and full-stack web development.
           </p>
 
           <div className="contact-links-grid">
-            <a href="mailto:harshdeepkaur1208@gmail.com" className="btn btn-outline">
+            <a href="mailto:singhsakshi0365@gmail.com" className="btn btn-outline">
               <FiMail size={16} /> Email Me →
             </a>
             <a
-              href="https://www.linkedin.com/in/harshdeep-kaur-58b5a4320/"
+              href="https://www.linkedin.com/in/sakshi-singh-a62017334/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="btn btn-outline"
             >
               <FiLinkedin size={16} /> LinkedIn →
             </a>
             <a
-              href="https://github.com/24-Harshdeep"
+              href="https://github.com/sakshisingh62"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="btn btn-outline"
             >
               <FiGithub size={16} /> GitHub →
             </a>
             <a
-              href="/Harshdeep_FullStackDeveloper_Resume.pdf"
+              href="/Sakshi_FullStack_resume.pdf"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="btn btn-primary"
             >
               <FiFileText size={16} /> Resume ↗
@@ -96,7 +96,7 @@ export default function Contact() {
             style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}
           >
             <input type="text" name="_gotcha" tabIndex="-1" style={{ display: 'none' }} />
-            <input type="hidden" name="_subject" value="New portfolio inquiry" />
+            <input type="hidden" name="_subject" value="New portfolio inquiry for Sakshi" />
 
             <div style={{ marginBottom: '1.25rem' }}>
               <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
@@ -148,7 +148,7 @@ export default function Contact() {
                 name="message"
                 rows="4"
                 required
-                placeholder="Hi Harshdeep, I would love to talk about..."
+                placeholder="Hi Sakshi, I would love to talk about..."
                 style={{
                   width: '100%',
                   padding: '0.75rem 1rem',

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion as Motion, useScroll, useSpring } from 'framer-motion'
 
 export default function GrowthJourney() {
   const containerRef = useRef(null)
@@ -16,34 +16,39 @@ export default function GrowthJourney() {
 
   const timelineEvents = [
     {
-      year: '2024',
-      title: 'BCA & Development Journey Began',
-      desc: 'Enrolled in Bachelor of Computer Applications (Eternal University). Built foundational projects including ZaikaHub (React recipe platform) and Adaptive Chatbot (Node/Express/MongoDB session management).',
+      year: '2020 – 2024',
+      title: 'Bachelor of Art (English Honours)',
+      desc: 'Completed Bachelor of Art (English Honours) in Medininagar, Jharkhand.',
     },
     {
-      year: '2025',
-      title: 'Full-Stack Expansion & Advanced MERN',
-      desc: 'Mastered REST API architecture, database schema design, state management in React, and modern TypeScript workflows.',
+      year: 'July 2024 – Present',
+      title: 'Bachelor of Computer Application',
+      desc: 'Pursuing a Bachelor of Computer Application at Eternal University, Baru Sahib.',
     },
     {
-      year: '2026',
+      year: 'Navgurukul Experiences',
+      title: 'Jury Member',
+      desc: 'Standardized evaluation metrics and provided technical feedback to 50+ students, aligning project architectures with industry standards.',
+    },
+    {
+      year: 'Navgurukul Experiences',
+      title: 'Facility In-Charge',
+      desc: 'Optimized campus logistics and administrative workflows while spearheading facility management initiatives to improve operational efficiency.',
+    },
+    {
+      year: '6 months',
       title: 'Neximprove — Frontend Developer Intern',
-      desc: 'Joined Neximprove as a Frontend Developer Intern (Jan 2026 – Jul 2026). Worked inside SaaS codebase across Sales UI, Broker Portal, Pricing Pages, Onboarding, Learning Portal, and Customer 360.',
+      desc: 'Worked with Next.js to develop responsive web applications and UI components.',
     },
     {
-      year: '2026',
-      title: 'Axemata Modas — Web Developer / Full Stack Intern',
-      desc: 'Engineered full-stack e-commerce architecture integrating customer storefront, Express/Node REST APIs, MongoDB models, and admin workflow control panels.',
-    },
-    {
-      year: '2026',
-      title: 'GSSoC 2026 (Global Rank #1,493) & Open Source',
-      desc: 'Completed GirlScript Summer of Code (GSSoC 2026) achieving Global Rank #1,493 as an active open-source contributor to CommitPulse (frontend localization and UI refactoring).',
+      year: '2 months – Present',
+      title: 'Neximprove — Full Stack Developer Intern',
+      desc: 'Currently working on frontend and backend development.',
     },
     {
       year: 'NOW',
-      title: 'Building & Seeking Full Stack, AI/ML & Software Engineer Roles',
-      desc: 'Actively exploring Full Stack, Software Engineering, and AI/ML Developer roles while building autonomous AI Agents, LLM tools, and web applications.',
+      title: 'Seeking Full-Stack Developer Internship Opportunities',
+      desc: 'Eager to gain more real-world experience through an internship and contribute to functional, user-friendly web applications.',
     },
   ]
 
@@ -53,7 +58,7 @@ export default function GrowthJourney() {
         <span className="section-label">Growth & Milestones</span>
         <h2 className="section-title">Development Journey</h2>
         <p className="section-subtitle">
-          A continuous timeline of software engineering progression, real product internships, and open-source contributions.
+          Education, professional experience, and community responsibilities from the resume.
         </p>
 
         <div className="timeline-container" ref={containerRef}>
@@ -61,13 +66,13 @@ export default function GrowthJourney() {
           <div className="timeline-guide-line" />
 
           {/* Glowing active progress line animated with scroll */}
-          <motion.div
+          <Motion.div
             className="timeline-progress-line"
             style={{ scaleY, originY: 0 }}
           />
 
           {timelineEvents.map((item, idx) => (
-            <motion.div
+            <Motion.div
               key={idx}
               className="timeline-item"
               initial={{ opacity: 0, x: 20 }}
@@ -79,7 +84,7 @@ export default function GrowthJourney() {
               <div className="timeline-year">{item.year}</div>
               <h3 className="timeline-title">{item.title}</h3>
               <p className="timeline-desc">{item.desc}</p>
-            </motion.div>
+            </Motion.div>
           ))}
         </div>
       </div>

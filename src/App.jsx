@@ -9,10 +9,12 @@ import Hero from './components/Hero'
 import ProofStrip from './components/ProofStrip'
 import Projects from './components/Projects'
 import GitHubActivity from './components/GitHubActivity'
+import Experience from './components/Experience'
 import SkillsEnhanced from './components/SkillsEnhanced'
 import BeyondProjects from './components/BeyondProjects'
 import GrowthJourney from './components/GrowthJourney'
 import About from './components/About'
+import Education from './components/Education'
 import Certifications from './components/Certifications'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -43,10 +45,12 @@ function App() {
         <ProofStrip />
         <Projects />
         <GitHubActivity />
+        <Experience />
         <SkillsEnhanced />
         <BeyondProjects />
         <GrowthJourney />
         <About />
+        <Education />
         <Certifications />
         <Contact />
       </main>
