@@ -8,6 +8,7 @@ export default function SignatureIntro({ onComplete }) {
     return !window.matchMedia('(prefers-reduced-motion: reduce)').matches && urlParams.get('skipIntro') !== 'true'
   })
   const [exiting, setExiting] = useState(false)
+  const [pointerState, setPointerState] = useState({ x: 50, y: 50, tiltX: 0, tiltY: 0 })
 
   const finish = () => {
     if (exiting) return
@@ -16,6 +17,18 @@ export default function SignatureIntro({ onComplete }) {
       setVisible(false)
       onComplete?.()
     }, 450)
+  }
+
+  const handlePointerMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2
+    setPointerState({
+      x: (x / 2 + 0.5) * 100,
+      y: (y / 2 + 0.5) * 100,
+      tiltX: x * 3,
+      tiltY: y * -3,
+    })
   }
 
   useEffect(() => {
@@ -48,9 +61,29 @@ export default function SignatureIntro({ onComplete }) {
             Skip <span aria-hidden="true">→</span>
           </button>
 
-          <div className="signature-video-container">
+          <div
+            className="signature-video-container"
+            onPointerMove={handlePointerMove}
+            onPointerLeave={() => setPointerState({ x: 50, y: 50, tiltX: 0, tiltY: 0 })}
+            style={{
+              '--signature-pointer-x': `${pointerState.x}%`,
+              '--signature-pointer-y': `${pointerState.y}%`,
+              '--signature-tilt-x': `${pointerState.tiltX}deg`,
+              '--signature-tilt-y': `${pointerState.tiltY}deg`,
+            }}
+          >
             {/* Ambient Radial Vignette */}
             <div className="signature-vignette" />
+            <div className="signature-orbit signature-orbit-primary" aria-hidden="true" />
+            <div className="signature-orbit signature-orbit-secondary" aria-hidden="true" />
+
+            <div className="signature-loader-copy" aria-hidden="true">
+              <span className="signature-loader-kicker">PORTFOLIO / INITIALIZING</span>
+              <span className="signature-loader-status">Crafting your digital presence</span>
+              <div className="signature-progress-track">
+                <span className="signature-progress-bar" />
+              </div>
+            </div>
 
             <svg
               className="signature-svg-stage"
