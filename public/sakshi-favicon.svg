@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sakshi favicon">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#07080c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="14" y1="12" x2="51" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <path d="M17 18h30M17 46h30" stroke="url(#accent)" stroke-linecap="round" stroke-width="3" opacity=".9"/>
+  <text x="32" y="43" fill="#f8fafc" font-family="Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle">S</text>
+</svg>
