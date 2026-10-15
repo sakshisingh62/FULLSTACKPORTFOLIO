@@ -19,7 +19,7 @@ export default function Header() {
       <div className="container nav-container">
         <a href="#hero" className="brand-mark">
           <span className="brand-dot" />
-          <span className="brand-text-shimmer">Sakshi</span>
+          <span className="brand-text-shimmer">SAKSHI</span>
         </a>
 
         <ul className="nav-links">
