@@ -43,7 +43,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <div>
-            <strong>SAKSHI</strong>
+            <strong className="footer-name-shimmer">SAKSHI</strong>
             <span>Full-Stack Web Developer</span>
           </div>
           <span>© 2026 Sakshi. Built with care.</span>

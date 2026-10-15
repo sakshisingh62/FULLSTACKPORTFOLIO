@@ -606,21 +606,175 @@ section {
   50% { opacity: 0.35; }
 }
 
-.hero-title {
-  font-family: var(--font-heading);
-  font-size: 2.85rem;
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  background: var(--gradient-text);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.75rem;
+/* ============================================================
+   Attractive Holographic Name Styling (Sakshi)
+   ============================================================ */
+.hero-title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.85rem;
 }
 
+.hero-salutation {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--accent-cyan);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  opacity: 0.92;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero-name-attractive {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-size: 3.75rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  width: fit-content;
+  user-select: none;
+  cursor: default;
+}
+
+.name-text-shimmer {
+  background: linear-gradient(
+    115deg,
+    #ffffff 0%,
+    #e0f2fe 18%,
+    #38bdf8 38%,
+    #818cf8 58%,
+    #c084fc 78%,
+    #ffffff 100%
+  );
+  background-size: 240% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holographicTextFlow 6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.35)) drop-shadow(0 0 45px rgba(192, 132, 252, 0.2));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.hero-name-attractive:hover .name-text-shimmer {
+  filter: drop-shadow(0 0 32px rgba(56, 189, 248, 0.6)) drop-shadow(0 0 55px rgba(192, 132, 252, 0.45));
+  transform: translateY(-1px);
+}
+
+/* Twinkling ambient sparkles */
+.name-sparkle {
+  position: absolute;
+  color: #38bdf8;
+  font-size: 1rem;
+  pointer-events: none;
+  animation: sparkleTwinkle 2.5s ease-in-out infinite;
+  opacity: 0.8;
+  text-shadow: 0 0 10px #38bdf8, 0 0 20px #818cf8;
+}
+
+.name-sparkle-top {
+  top: -8px;
+  right: -24px;
+  animation-delay: 0s;
+  color: #38bdf8;
+}
+
+.name-sparkle-bottom {
+  bottom: 4px;
+  left: -20px;
+  font-size: 0.8rem;
+  animation-delay: 1.25s;
+  color: #c084fc;
+  text-shadow: 0 0 10px #c084fc;
+}
+
+@keyframes holographicTextFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    transform: scale(0.7) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.25) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+/* Brand mark header & footer shimmer */
+.brand-text-shimmer {
+  background: linear-gradient(120deg, #ffffff 0%, #38bdf8 50%, #c084fc 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: filter 0.25s ease;
+}
+
+.brand-mark:hover .brand-text-shimmer {
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+}
+
+.footer-name-shimmer {
+  background: linear-gradient(120deg, #ffffff 0%, #38bdf8 60%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Light mode adjustments */
+html.light .name-text-shimmer {
+  background: linear-gradient(
+    115deg,
+    #0f172a 0%,
+    #0284c7 35%,
+    #4f46e5 65%,
+    #7c3aed 100%
+  );
+  background-size: 240% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 14px rgba(2, 132, 199, 0.25));
+}
+
+html.light .brand-text-shimmer,
+html.light .footer-name-shimmer {
+  background: linear-gradient(120deg, #0f172a 0%, #0284c7 60%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile responsive for hero name */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.25rem;
+  .hero-name-attractive {
+    font-size: 2.75rem;
+  }
+  .name-sparkle-top {
+    right: -16px;
+    font-size: 0.85rem;
+  }
+  .name-sparkle-bottom {
+    left: -14px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-name-attractive {
+    font-size: 2.35rem;
   }
 }
 

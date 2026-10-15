@@ -39,9 +39,14 @@ export default function Hero() {
               Open to Frontend & Full-Stack Developer Opportunities
             </Motion.div>
 
-            <Motion.h1 variants={itemVariants} className="hero-title">
-              SAKSHI
-            </Motion.h1>
+            <Motion.div variants={itemVariants} className="hero-title-container">
+              <span className="hero-salutation">Hi, I'm</span>
+              <h1 className="hero-name-attractive">
+                <span className="name-text-shimmer">Sakshi</span>
+                <span className="name-sparkle name-sparkle-top" aria-hidden="true">✦</span>
+                <span className="name-sparkle name-sparkle-bottom" aria-hidden="true">✦</span>
+              </h1>
+            </Motion.div>
 
             <Motion.div variants={itemVariants} className="hero-subtitle">
               Full-Stack Web Developer building user-friendly web applications.
