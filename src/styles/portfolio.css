@@ -2280,27 +2280,104 @@ input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
   }
 }
 
-/* Custom Magnetic Cursor */
+/* Morpho butterfly follower */
 @media (pointer: fine) {
   .custom-cursor {
     position: fixed;
     top: 0;
     left: 0;
-    width: 10px;
-    height: 10px;
-    background-color: var(--accent-cyan);
-    border-radius: 50%;
+    width: 76px;
+    height: 76px;
     pointer-events: none;
     z-index: 10000;
-    transform: translate(-50%, -50%);
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
-    box-shadow: 0 0 12px var(--accent-cyan);
+    opacity: 0;
+    transform: translate3d(-120px, -120px, 0);
+    transform-style: preserve-3d;
+    transition: opacity 0.16s ease;
+    will-change: transform, opacity;
   }
-  .custom-cursor.hovering {
-    width: 36px;
-    height: 36px;
-    background-color: rgba(56, 189, 248, 0.25);
-    border: 1px solid var(--accent-cyan);
+
+  .butterfly-rig {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 900px;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .wing-side {
+    position: absolute;
+    top: 0;
+    width: 38px;
+    height: 76px;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .wing-side--left {
+    right: 50%;
+    transform-origin: right 50%;
+  }
+
+  .wing-side--right {
+    left: 50%;
+    transform-origin: left 50%;
+  }
+
+  .wing-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter:
+      drop-shadow(0 0 10px rgba(0, 162, 255, 0.45))
+      drop-shadow(0 0 3px rgba(79, 172, 254, 0.7));
+  }
+
+  .butterfly-body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    width: 5px;
+    height: 38px;
+    border-radius: 6px;
+    background: radial-gradient(ellipse at center, #1e293b 0%, #030712 100%);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.85);
+    transform: translate(-50%, -50%);
+  }
+
+  .butterfly-body::before,
+  .butterfly-body::after {
+    position: absolute;
+    top: -11px;
+    width: 2px;
+    height: 12px;
+    content: '';
+    border-top: 2px solid #64748b;
+    border-radius: 50%;
+    box-shadow: 0 -1px 2px #38bdf8;
+  }
+
+  .butterfly-body::before {
+    left: -2px;
+    border-left: 1.5px solid #64748b;
+    transform: rotate(-26deg);
+  }
+
+  .butterfly-body::after {
+    right: -2px;
+    border-right: 1.5px solid #64748b;
+    transform: rotate(26deg);
+  }
+
+  html.light .wing-svg {
+    filter:
+      brightness(0.76)
+      contrast(1.22)
+      saturate(1.25)
+      drop-shadow(0 0 1px rgba(4, 47, 79, 0.9))
+      drop-shadow(0 2px 3px rgba(2, 132, 199, 0.28));
   }
 }
 
