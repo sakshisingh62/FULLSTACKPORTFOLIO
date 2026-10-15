@@ -18,6 +18,10 @@ export const useStore = create(
       
       leetcodeStats: null,
       setLeetcodeStats: (stats) => set({ leetcodeStats: stats }),
+
+      // Butterfly Intro coordination: 'perched' | 'takeoff' | 'completed'
+      introPhase: 'perched',
+      setIntroPhase: (phase) => set({ introPhase: phase }),
     }),
     {
       name: 'portfolio-storage',

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
+import { useStore } from '../store/useStore'
 
 export default function SignatureIntro({ onComplete }) {
+  const setIntroPhase = useStore((state) => state.setIntroPhase)
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return true
     const urlParams = new URLSearchParams(window.location.search)
@@ -13,6 +15,7 @@ export default function SignatureIntro({ onComplete }) {
   const finish = () => {
     if (exiting) return
     setExiting(true)
+    setIntroPhase('takeoff')
     window.setTimeout(() => {
       setVisible(false)
       onComplete?.()
@@ -33,13 +36,15 @@ export default function SignatureIntro({ onComplete }) {
 
   useEffect(() => {
     if (!visible) {
+      setIntroPhase('completed')
       onComplete?.()
       return undefined
     }
 
+    setIntroPhase('perched')
     const timer = window.setTimeout(() => finish(), 3400)
     return () => window.clearTimeout(timer)
-  }, [visible]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [visible, setIntroPhase]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!visible) return null
 
@@ -162,6 +167,17 @@ export default function SignatureIntro({ onComplete }) {
                 strokeWidth="3.5"
                 strokeLinecap="round"
                 filter="url(#neonBlueGlow)"
+              />
+
+              {/* 4. Target Anchor for Butterfly Perch on the 'i' of Sakshi */}
+              <circle
+                id="sakshi-i-dot"
+                cx="1174"
+                cy="485"
+                r="6"
+                fill="transparent"
+                pointerEvents="none"
+                opacity="0"
               />
             </svg>
           </div>

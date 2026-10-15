@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useStore } from '../store/useStore'
 
 export default function CustomCursor() {
   const butterflyRef = useRef(null)
@@ -27,11 +28,40 @@ export default function CustomCursor() {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
 
+    // Calculate exact screen coordinates for the dot of 'i' in "Sakshi"
+    function getDotCoords() {
+      const dotEl = document.getElementById('sakshi-i-dot')
+      if (dotEl) {
+        const rect = dotEl.getBoundingClientRect()
+        if (rect.width > 0 || rect.left > 0) {
+          return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          }
+        }
+      }
+      // Mathematical fallback for 1920x1080 viewBox with preserveAspectRatio="xMidYMid meet"
+      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080)
+      const offsetX = (window.innerWidth - 1920 * scale) / 2
+      const offsetY = (window.innerHeight - 1080 * scale) / 2
+      return {
+        x: offsetX + 1174 * scale,
+        y: offsetY + 485 * scale,
+      }
+    }
+
+    // Intro coordination state: 'perched' | 'takeoff' | 'completed'
+    let currentPhase = useStore.getState().introPhase || 'completed'
+
+    let mouseMoved = false
     let mouseX = window.innerWidth / 2
     let mouseY = window.innerHeight / 2
-    let currentX = mouseX
-    let currentY = mouseY
-    let currentAngle = 0
+
+    // If starting perched, position butterfly directly on top of the 'i'
+    const initialDot = getDotCoords()
+    let currentX = currentPhase === 'perched' ? initialDot.x : mouseX
+    let currentY = currentPhase === 'perched' ? initialDot.y : mouseY
+    let currentAngle = currentPhase === 'perched' ? -12 : 0
     let bankRoll = 0
 
     let time = 0
@@ -39,7 +69,50 @@ export default function CustomCursor() {
     let wingAngle = 20
     let animationFrameId
 
+    // Takeoff flight variables
+    let takeoffStartTime = 0
+    const takeoffDuration = 1800 // 1.8 seconds of smooth organic flow
+    let p0 = { x: currentX, y: currentY }
+    let p1 = { x: currentX, y: currentY }
+    let p2 = { x: currentX, y: currentY }
+    let p3 = { x: currentX, y: currentY }
+
+    function initiateTakeoff() {
+      if (currentPhase === 'takeoff' || currentPhase === 'completed') return
+      currentPhase = 'takeoff'
+      takeoffStartTime = performance.now()
+      p0 = { x: currentX, y: currentY }
+
+      // Curve 1: Launches upward and leftward with high lift
+      p1 = {
+        x: p0.x - Math.max(120, window.innerWidth * 0.16),
+        y: p0.y - Math.max(100, window.innerHeight * 0.22),
+      }
+
+      // Target arrival near the user cursor or hero center
+      const destX = mouseMoved ? mouseX : window.innerWidth * 0.5
+      const destY = mouseMoved ? mouseY : window.innerHeight * 0.45
+
+      // Curve 2: Swoops gracefully through the upper air of the page
+      p2 = {
+        x: destX + Math.max(80, window.innerWidth * 0.14),
+        y: destY - Math.max(70, window.innerHeight * 0.16),
+      }
+
+      p3 = { x: destX, y: destY }
+    }
+
+    // Subscribe to store phase changes
+    const unsubStore = useStore.subscribe((state) => {
+      if (state.introPhase === 'takeoff' && currentPhase === 'perched') {
+        initiateTakeoff()
+      } else if (state.introPhase === 'completed') {
+        currentPhase = 'completed'
+      }
+    })
+
     const handleMouseMove = (e) => {
+      mouseMoved = true
       mouseX = e.clientX
       mouseY = e.clientY
     }
@@ -55,7 +128,7 @@ export default function CustomCursor() {
       'rgba(165, 243, 252, ', // Ice cyan
       'rgba(56, 189, 248, ',  // Electric sky
       'rgba(14, 165, 233, ',  // Vivid azure
-      'rgba(255, 255, 255, '  // Bright white sparkle
+      'rgba(255, 255, 255, ', // Bright white sparkle
     ]
 
     function spawnParticle(x, y, speed) {
@@ -70,7 +143,7 @@ export default function CustomCursor() {
         life: 1.0,
         decay: Math.random() * 0.015 + 0.012, // Lasts ~1 to 1.5 seconds
         colorPrefix: colors[Math.floor(Math.random() * colors.length)],
-        twinkleSpeed: Math.random() * 0.2 + 0.1
+        twinkleSpeed: Math.random() * 0.2 + 0.1,
       })
     }
 
@@ -104,65 +177,159 @@ export default function CustomCursor() {
       }
     }
 
-    function animate() {
+    function animate(now) {
       time += 0.02
 
-      // 1. Organic drifting float
-      const driftX = Math.sin(time * 1.8) * 12 + Math.cos(time * 0.9) * 6
-      const driftY = Math.cos(time * 1.5) * 10 + Math.sin(time * 1.1) * 5
+      if (currentPhase === 'perched') {
+        // 1. Butterfly is perched right on top of the 'i' of "Sakshi"
+        const dotCoords = getDotCoords()
 
-      const targetX = mouseX + driftX
-      const targetY = mouseY + driftY
+        // Gentle breathing micro-hover over the 'i'
+        const hoverX = Math.sin(time * 1.5) * 1.2
+        const hoverY = Math.cos(time * 1.2) * 1.0
+        currentX = dotCoords.x + hoverX
+        currentY = dotCoords.y + hoverY
 
-      const prevX = currentX
-      const prevY = currentY
-      currentX = lerp(currentX, targetX, 0.045)
-      currentY = lerp(currentY, targetY, 0.045)
+        // Gentle resting wing breathing flutter
+        wingAngle = 32 + Math.sin(time * 2.2) * 12
+        wingL.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
+        wingR.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
 
-      const vx = currentX - prevX
-      const vy = currentY - prevY
-      const speed = Math.hypot(vx, vy)
+        // Perched upright posture on the 'i'
+        currentAngle = -12 + Math.sin(time * 1.2) * 3
+        bankRoll = Math.sin(time * 1.6) * 3
 
-      // 2. Flap & Glide
-      const pulseCycle = Math.sin(time * 2.8)
-      const isActivelyFlapping = speed > 0.8 || pulseCycle > 0.2
+        // Emit sparkling fairy dust that drifts gently over the letter 'i'
+        if (Math.random() < 0.26) {
+          spawnParticle(currentX, currentY, 0.4)
+        }
 
-      if (isActivelyFlapping) {
-        flapPhase += Math.max(0.18, Math.min(0.36, speed * 0.04 + 0.18))
-        wingAngle = 28 + Math.sin(flapPhase) * 45
+        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38}px, 0) rotate(${currentAngle}deg)`
+        rig.style.transform = `rotateY(${bankRoll}deg)`
+      } else if (currentPhase === 'takeoff') {
+        // 2. Page loads: butterfly takes off from the 'i' and flows onto the page!
+        const elapsed = (now || performance.now()) - takeoffStartTime
+        const progress = Math.min(elapsed / takeoffDuration, 1)
+
+        // Smooth cubic easeInOut
+        const t =
+          progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2
+
+        // Dynamically adjust destination towards cursor if user moves mouse
+        if (mouseMoved) {
+          p3.x = lerp(p3.x, mouseX, 0.08)
+          p3.y = lerp(p3.y, mouseY, 0.08)
+        }
+
+        const oneMinusT = 1 - t
+        const flowX =
+          oneMinusT * oneMinusT * oneMinusT * p0.x +
+          3 * oneMinusT * oneMinusT * t * p1.x +
+          3 * oneMinusT * t * t * p2.x +
+          t * t * t * p3.x
+        const flowY =
+          oneMinusT * oneMinusT * oneMinusT * p0.y +
+          3 * oneMinusT * oneMinusT * t * p1.y +
+          3 * oneMinusT * t * t * p2.y +
+          t * t * t * p3.y
+
+        const vx = flowX - currentX
+        const vy = flowY - currentY
+        const speed = Math.hypot(vx, vy)
+        currentX = flowX
+        currentY = flowY
+
+        // Active wing flapping during flight into the page
+        flapPhase += 0.32
+        wingAngle = 26 + Math.sin(flapPhase) * 48
+        wingL.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
+        wingR.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
+
+        // Rotate along trajectory
+        if (speed > 0.35) {
+          const targetAngle = (Math.atan2(vy, vx) * 180) / Math.PI + 90
+          let angleDiff = (targetAngle - currentAngle) % 360
+          if (angleDiff > 180) angleDiff -= 360
+          if (angleDiff < -180) angleDiff += 360
+          currentAngle += angleDiff * 0.1
+          const targetBank = Math.max(-28, Math.min(28, angleDiff * 1.3))
+          bankRoll = lerp(bankRoll, targetBank, 0.1)
+        }
+
+        // Shimmering fairy dust stream trailing behind during flight
+        const spawnCount = speed > 2.2 ? 3 : 2
+        for (let i = 0; i < spawnCount; i++) {
+          spawnParticle(currentX, currentY, speed)
+        }
+
+        const lift = Math.cos(flapPhase) * 3
+        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
+        rig.style.transform = `rotateY(${bankRoll}deg)`
+
+        if (progress >= 1) {
+          currentPhase = 'completed'
+          useStore.getState().setIntroPhase('completed')
+        }
       } else {
-        wingAngle = lerp(wingAngle, 18 + Math.sin(time * 3) * 5, 0.08)
+        // 3. Page interactive follower mode
+        // 1. Organic drifting float
+        const driftX = Math.sin(time * 1.8) * 12 + Math.cos(time * 0.9) * 6
+        const driftY = Math.cos(time * 1.5) * 10 + Math.sin(time * 1.1) * 5
+
+        const targetX = mouseX + driftX
+        const targetY = mouseY + driftY
+
+        const prevX = currentX
+        const prevY = currentY
+        currentX = lerp(currentX, targetX, 0.045)
+        currentY = lerp(currentY, targetY, 0.045)
+
+        const vx = currentX - prevX
+        const vy = currentY - prevY
+        const speed = Math.hypot(vx, vy)
+
+        // 2. Flap & Glide
+        const pulseCycle = Math.sin(time * 2.8)
+        const isActivelyFlapping = speed > 0.8 || pulseCycle > 0.2
+
+        if (isActivelyFlapping) {
+          flapPhase += Math.max(0.18, Math.min(0.36, speed * 0.04 + 0.18))
+          wingAngle = 28 + Math.sin(flapPhase) * 45
+        } else {
+          wingAngle = lerp(wingAngle, 18 + Math.sin(time * 3) * 5, 0.08)
+        }
+
+        wingL.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
+        wingR.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
+
+        // 3. Spawning Fairy Dust Trail
+        const spawnCount = isActivelyFlapping ? (speed > 1.8 ? 3 : 2) : 1
+        for (let i = 0; i < spawnCount; i++) {
+          spawnParticle(currentX, currentY, speed)
+        }
+
+        // 4. Inertial rotation
+        if (speed > 0.35) {
+          const targetAngle = (Math.atan2(vy, vx) * 180) / Math.PI + 90
+
+          let angleDiff = (targetAngle - currentAngle) % 360
+          if (angleDiff > 180) angleDiff -= 360
+          if (angleDiff < -180) angleDiff += 360
+
+          currentAngle += angleDiff * 0.06
+          const targetBank = Math.max(-25, Math.min(25, angleDiff * 1.2))
+          bankRoll = lerp(bankRoll, targetBank, 0.08)
+        } else {
+          bankRoll = lerp(bankRoll, 0, 0.05)
+        }
+
+        const lift = Math.cos(flapPhase) * (isActivelyFlapping ? 3.5 : 0.8)
+
+        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
+        rig.style.transform = `rotateY(${bankRoll}deg)`
       }
-
-      wingL.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
-      wingR.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
-
-      // 3. Spawning Fairy Dust Trail
-      // Emits 1-2 dust particles per frame while gliding, ramps up when actively flying/turning
-      const spawnCount = isActivelyFlapping ? (speed > 1.8 ? 3 : 2) : 1
-      for (let i = 0; i < spawnCount; i++) {
-        spawnParticle(currentX, currentY, speed)
-      }
-
-      // 4. Inertial rotation
-      if (speed > 0.35) {
-        const targetAngle = (Math.atan2(vy, vx) * 180) / Math.PI + 90
-
-        let angleDiff = (targetAngle - currentAngle) % 360
-        if (angleDiff > 180) angleDiff -= 360
-        if (angleDiff < -180) angleDiff += 360
-
-        currentAngle += angleDiff * 0.06
-        const targetBank = Math.max(-25, Math.min(25, angleDiff * 1.2))
-        bankRoll = lerp(bankRoll, targetBank, 0.08)
-      } else {
-        bankRoll = lerp(bankRoll, 0, 0.05)
-      }
-
-      const lift = Math.cos(flapPhase) * (isActivelyFlapping ? 3.5 : 0.8)
-
-      butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
-      rig.style.transform = `rotateY(${bankRoll}deg)`
 
       updateParticles()
       animationFrameId = requestAnimationFrame(animate)
@@ -174,6 +341,7 @@ export default function CustomCursor() {
       window.cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', resizeCanvas)
       window.removeEventListener('mousemove', handleMouseMove)
+      unsubStore()
     }
   }, [])
 
