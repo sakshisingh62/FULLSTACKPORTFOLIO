@@ -111,12 +111,27 @@ export default function CustomCursor() {
       }
     })
 
+    let lastActivityTime = performance.now()
+
     const handleMouseMove = (e) => {
       mouseMoved = true
+      lastActivityTime = performance.now()
       mouseX = e.clientX
       mouseY = e.clientY
     }
+
+    const handleTouch = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        mouseMoved = true
+        lastActivityTime = performance.now()
+        mouseX = e.touches[0].clientX
+        mouseY = e.touches[0].clientY
+      }
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('touchstart', handleTouch, { passive: true })
+    window.addEventListener('touchmove', handleTouch, { passive: true })
 
     function lerp(start, end, factor) {
       return start + (end - start) * factor
@@ -204,7 +219,7 @@ export default function CustomCursor() {
           spawnParticle(currentX, currentY, 0.4)
         }
 
-        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38}px, 0) rotate(${currentAngle}deg)`
+        butterfly.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) rotate(${currentAngle}deg)`
         rig.style.transform = `rotateY(${bankRoll}deg)`
       } else if (currentPhase === 'takeoff') {
         // 2. Page loads: butterfly takes off from the 'i' and flows onto the page!
@@ -265,7 +280,7 @@ export default function CustomCursor() {
         }
 
         const lift = Math.cos(flapPhase) * 3
-        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
+        butterfly.style.transform = `translate3d(${currentX}px, ${currentY + lift}px, 0) translate(-50%, -50%) rotate(${currentAngle}deg)`
         rig.style.transform = `rotateY(${bankRoll}deg)`
 
         if (progress >= 1) {
@@ -274,6 +289,15 @@ export default function CustomCursor() {
         }
       } else {
         // 3. Page interactive follower mode
+        const nowTime = now || performance.now()
+        // If user is idle (e.g. on mobile without continuous touch), gently wander across screen
+        if (nowTime - lastActivityTime > 2200) {
+          const wanderX = Math.sin(time * 0.6) * (window.innerWidth * 0.28)
+          const wanderY = Math.cos(time * 0.45) * (window.innerHeight * 0.18)
+          mouseX = lerp(mouseX, window.innerWidth * 0.5 + wanderX, 0.02)
+          mouseY = lerp(mouseY, window.innerHeight * 0.45 + wanderY, 0.02)
+        }
+
         // 1. Organic drifting float
         const driftX = Math.sin(time * 1.8) * 12 + Math.cos(time * 0.9) * 6
         const driftY = Math.cos(time * 1.5) * 10 + Math.sin(time * 1.1) * 5
@@ -327,7 +351,7 @@ export default function CustomCursor() {
 
         const lift = Math.cos(flapPhase) * (isActivelyFlapping ? 3.5 : 0.8)
 
-        butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
+        butterfly.style.transform = `translate3d(${currentX}px, ${currentY + lift}px, 0) translate(-50%, -50%) rotate(${currentAngle}deg)`
         rig.style.transform = `rotateY(${bankRoll}deg)`
       }
 
@@ -341,6 +365,8 @@ export default function CustomCursor() {
       window.cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', resizeCanvas)
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('touchstart', handleTouch)
+      window.removeEventListener('touchmove', handleTouch)
       unsubStore()
     }
   }, [])

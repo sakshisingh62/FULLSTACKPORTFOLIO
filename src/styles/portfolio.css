@@ -2392,11 +2392,28 @@ html.light .wing-svg {
     drop-shadow(0 2px 3px rgba(2, 132, 199, 0.28));
 }
 
-@media (pointer: coarse) {
+/* Mobile responsive styling for Morpho butterfly */
+@media (max-width: 640px) {
   .butterfly-container,
-  .custom-cursor,
-  #trail-canvas {
-    display: none !important;
+  .custom-cursor {
+    width: 54px;
+    height: 54px;
+  }
+
+  .wing-side {
+    width: 27px;
+    height: 54px;
+  }
+
+  .butterfly-body {
+    width: 4px;
+    height: 28px;
+  }
+
+  .butterfly-body::before,
+  .butterfly-body::after {
+    top: -8px;
+    height: 9px;
   }
 }
 
