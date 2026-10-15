@@ -3,145 +3,251 @@ import { useEffect, useRef } from 'react'
 export default function CustomCursor() {
   const butterflyRef = useRef(null)
   const rigRef = useRef(null)
-  const leftWingRef = useRef(null)
-  const rightWingRef = useRef(null)
+  const wingLRef = useRef(null)
+  const wingRRef = useRef(null)
+  const canvasRef = useRef(null)
 
   useEffect(() => {
-    if (!window.matchMedia('(pointer: fine)').matches) return undefined
-
     const butterfly = butterflyRef.current
     const rig = rigRef.current
-    const leftWing = leftWingRef.current
-    const rightWing = rightWingRef.current
-    if (!butterfly || !rig || !leftWing || !rightWing) return undefined
+    const wingL = wingLRef.current
+    const wingR = wingRRef.current
+    const canvas = canvasRef.current
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let mouseX = -120
-    let mouseY = -120
+    if (!butterfly || !rig || !wingL || !wingR || !canvas) return undefined
+
+    // Canvas particle engine
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return undefined
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+
+    let mouseX = window.innerWidth / 2
+    let mouseY = window.innerHeight / 2
     let currentX = mouseX
     let currentY = mouseY
     let currentAngle = 0
     let bankRoll = 0
+
     let time = 0
     let flapPhase = 0
-    let wingAngle = 18
-    let previousTime = performance.now()
-    let frameId
+    let wingAngle = 20
+    let animationFrameId
 
-    const lerp = (start, end, factor) => start + (end - start) * factor
+    const handleMouseMove = (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+    }
+    window.addEventListener('mousemove', handleMouseMove)
 
-    const handleMouseMove = (event) => {
-      mouseX = event.clientX
-      mouseY = event.clientY
-      butterfly.style.opacity = '1'
+    function lerp(start, end, factor) {
+      return start + (end - start) * factor
     }
 
-    const handleMouseLeave = () => {
-      butterfly.style.opacity = '0'
+    // Particle Array
+    const particles = []
+    const colors = [
+      'rgba(165, 243, 252, ', // Ice cyan
+      'rgba(56, 189, 248, ',  // Electric sky
+      'rgba(14, 165, 233, ',  // Vivid azure
+      'rgba(255, 255, 255, '  // Bright white sparkle
+    ]
+
+    function spawnParticle(x, y, speed) {
+      // Disperse slightly along wing breadth
+      const spread = (Math.random() - 0.5) * 22
+      particles.push({
+        x: x + spread,
+        y: y + (Math.random() - 0.5) * 14,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: 0.4 + Math.random() * 0.9, // Gentle downward drift
+        size: Math.random() * 2.4 + 1.2,
+        life: 1.0,
+        decay: Math.random() * 0.015 + 0.012, // Lasts ~1 to 1.5 seconds
+        colorPrefix: colors[Math.floor(Math.random() * colors.length)],
+        twinkleSpeed: Math.random() * 0.2 + 0.1
+      })
     }
 
-    const animate = (now) => {
-      const frameScale = Math.min((now - previousTime) / 16.67, 2)
-      previousTime = now
-      time += 0.02 * frameScale
+    function updateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      const driftX = Math.sin(time * 1.8) * 8 + Math.cos(time * 0.9) * 4
-      const driftY = Math.cos(time * 1.5) * 7 + Math.sin(time * 1.1) * 4
-      const targetX = mouseX + 30 + driftX
-      const targetY = mouseY - 28 + driftY
-      const previousX = currentX
-      const previousY = currentY
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i]
+        p.x += p.vx
+        p.y += p.vy
+        p.life -= p.decay
 
-      currentX = lerp(currentX, targetX, 0.07 * frameScale)
-      currentY = lerp(currentY, targetY, 0.07 * frameScale)
+        if (p.life <= 0) {
+          particles.splice(i, 1)
+          continue
+        }
 
-      const velocityX = currentX - previousX
-      const velocityY = currentY - previousY
-      const speed = Math.hypot(velocityX, velocityY)
-      const flapping = !reduceMotion && (speed > 0.7 || Math.sin(time * 2.8) > 0.2)
+        // Shimmer opacity
+        const twinkle = Math.sin(p.life * 25 * p.twinkleSpeed)
+        const alpha = Math.max(0, p.life * (0.7 + twinkle * 0.3))
 
-      if (flapping) {
-        flapPhase += Math.max(0.18, Math.min(0.36, speed * 0.04 + 0.18)) * frameScale
+        // Draw glowing particle
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2)
+        ctx.fillStyle = p.colorPrefix + alpha + ')'
+        ctx.shadowBlur = 8
+        ctx.shadowColor = '#38bdf8'
+        ctx.fill()
+        ctx.restore()
+      }
+    }
+
+    function animate() {
+      time += 0.02
+
+      // 1. Organic drifting float
+      const driftX = Math.sin(time * 1.8) * 12 + Math.cos(time * 0.9) * 6
+      const driftY = Math.cos(time * 1.5) * 10 + Math.sin(time * 1.1) * 5
+
+      const targetX = mouseX + driftX
+      const targetY = mouseY + driftY
+
+      const prevX = currentX
+      const prevY = currentY
+      currentX = lerp(currentX, targetX, 0.045)
+      currentY = lerp(currentY, targetY, 0.045)
+
+      const vx = currentX - prevX
+      const vy = currentY - prevY
+      const speed = Math.hypot(vx, vy)
+
+      // 2. Flap & Glide
+      const pulseCycle = Math.sin(time * 2.8)
+      const isActivelyFlapping = speed > 0.8 || pulseCycle > 0.2
+
+      if (isActivelyFlapping) {
+        flapPhase += Math.max(0.18, Math.min(0.36, speed * 0.04 + 0.18))
         wingAngle = 28 + Math.sin(flapPhase) * 45
       } else {
-        wingAngle = lerp(wingAngle, 18 + Math.sin(time * 3) * (reduceMotion ? 0 : 4), 0.08 * frameScale)
+        wingAngle = lerp(wingAngle, 18 + Math.sin(time * 3) * 5, 0.08)
       }
 
-      leftWing.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
-      rightWing.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
+      wingL.style.transform = `rotateY(${wingAngle}deg) rotateZ(${-wingAngle * 0.15}deg)`
+      wingR.style.transform = `rotateY(${-wingAngle}deg) rotateZ(${wingAngle * 0.15}deg)`
 
-      if (speed > 0.3) {
-        const targetAngle = (Math.atan2(velocityY, velocityX) * 180) / Math.PI + 90
-        let angleDifference = (targetAngle - currentAngle) % 360
-        if (angleDifference > 180) angleDifference -= 360
-        if (angleDifference < -180) angleDifference += 360
+      // 3. Spawning Fairy Dust Trail
+      // Emits 1-2 dust particles per frame while gliding, ramps up when actively flying/turning
+      const spawnCount = isActivelyFlapping ? (speed > 1.8 ? 3 : 2) : 1
+      for (let i = 0; i < spawnCount; i++) {
+        spawnParticle(currentX, currentY, speed)
+      }
 
-        currentAngle += angleDifference * 0.06 * frameScale
-        bankRoll = lerp(bankRoll, Math.max(-25, Math.min(25, angleDifference * 1.2)), 0.08 * frameScale)
+      // 4. Inertial rotation
+      if (speed > 0.35) {
+        const targetAngle = (Math.atan2(vy, vx) * 180) / Math.PI + 90
+
+        let angleDiff = (targetAngle - currentAngle) % 360
+        if (angleDiff > 180) angleDiff -= 360
+        if (angleDiff < -180) angleDiff += 360
+
+        currentAngle += angleDiff * 0.06
+        const targetBank = Math.max(-25, Math.min(25, angleDiff * 1.2))
+        bankRoll = lerp(bankRoll, targetBank, 0.08)
       } else {
-        bankRoll = lerp(bankRoll, 0, 0.05 * frameScale)
+        bankRoll = lerp(bankRoll, 0, 0.05)
       }
 
-      const lift = reduceMotion ? 0 : Math.cos(flapPhase) * (flapping ? 3.5 : 0.8)
+      const lift = Math.cos(flapPhase) * (isActivelyFlapping ? 3.5 : 0.8)
+
       butterfly.style.transform = `translate3d(${currentX - 38}px, ${currentY - 38 + lift}px, 0) rotate(${currentAngle}deg)`
       rig.style.transform = `rotateY(${bankRoll}deg)`
-      frameId = window.requestAnimationFrame(animate)
+
+      updateParticles()
+      animationFrameId = requestAnimationFrame(animate)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseleave', handleMouseLeave)
-    frameId = window.requestAnimationFrame(animate)
+    animationFrameId = requestAnimationFrame(animate)
 
     return () => {
-      window.cancelAnimationFrame(frameId)
+      window.cancelAnimationFrame(animationFrameId)
+      window.removeEventListener('resize', resizeCanvas)
       window.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [])
 
   return (
-    <div ref={butterflyRef} className="custom-cursor" aria-hidden="true">
-      <div ref={rigRef} className="butterfly-rig">
-        <div ref={leftWingRef} className="wing-side wing-side--left">
-          <svg className="wing-svg" viewBox="0 0 65 115" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id="morphoGradL" cx="88%" cy="46%" r="85%">
-                <stop offset="0%" stopColor="#70d6ff" />
-                <stop offset="22%" stopColor="#0080ff" />
-                <stop offset="58%" stopColor="#0038b8" />
-                <stop offset="84%" stopColor="#001140" />
-                <stop offset="100%" stopColor="#02040a" />
-              </radialGradient>
-            </defs>
-            <path d="M63 56C52 32 16 10 3 1c-5 23 3 47 19 61C2 72 8 106 29 112c19 2 32-24 34-56Z" fill="url(#morphoGradL)" />
-            <path d="M63 56Q38 28 8 9M63 56Q32 40 18 56M63 56Q32 72 26 104M42 33Q24 22 12 28M45 74Q30 84 25 90" fill="none" stroke="rgba(0, 0, 0, 0.55)" strokeLinecap="round" strokeWidth="1.2" />
-            <circle cx="8" cy="18" r="1.3" fill="#fff" opacity="0.9" />
-            <circle cx="15" cy="42" r="1.3" fill="#fff" opacity="0.9" />
-            <circle cx="26" cy="88" r="1.3" fill="#fff" opacity="0.9" />
-          </svg>
-        </div>
+    <>
+      {/* Particle Canvas */}
+      <canvas id="trail-canvas" ref={canvasRef} />
 
-        <div className="butterfly-body" />
+      {/* Butterfly */}
+      <div className="butterfly-container custom-cursor" id="butterfly" ref={butterflyRef} aria-hidden="true">
+        <div className="butterfly-rig" id="rig" ref={rigRef}>
+          {/* Left Wing */}
+          <div className="wing-side left" id="wingL" ref={wingLRef}>
+            <svg className="wing-svg" viewBox="0 0 65 115" preserveAspectRatio="none">
+              <defs>
+                <radialGradient id="morphoGradL" cx="88%" cy="46%" r="85%">
+                  <stop offset="0%" stopColor="#70d6ff" />
+                  <stop offset="22%" stopColor="#0080ff" />
+                  <stop offset="58%" stopColor="#0038b8" />
+                  <stop offset="84%" stopColor="#001140" />
+                  <stop offset="100%" stopColor="#02040a" />
+                </radialGradient>
+              </defs>
+              <path
+                d="M 63 56 C 52 32, 16 10, 3 1 C -2 24, 6 48, 22 62 C 2 72, 8 106, 29 112 C 48 114, 61 88, 63 56 Z"
+                fill="url(#morphoGradL)"
+              />
+              <path
+                d="M 63 56 Q 38 28 8 9 M 63 56 Q 32 40 18 56 M 63 56 Q 32 72 26 104 M 42 33 Q 24 22 12 28 M 45 74 Q 30 84 25 90"
+                stroke="rgba(0, 0, 0, 0.55)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle cx="8" cy="18" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="15" cy="42" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="26" cy="88" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="36" cy="106" r="1.1" fill="#ffffff" opacity="0.8" />
+            </svg>
+          </div>
 
-        <div ref={rightWingRef} className="wing-side wing-side--right">
-          <svg className="wing-svg" viewBox="0 0 65 115" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id="morphoGradR" cx="12%" cy="46%" r="85%">
-                <stop offset="0%" stopColor="#70d6ff" />
-                <stop offset="22%" stopColor="#0080ff" />
-                <stop offset="58%" stopColor="#0038b8" />
-                <stop offset="84%" stopColor="#001140" />
-                <stop offset="100%" stopColor="#02040a" />
-              </radialGradient>
-            </defs>
-            <path d="M2 56C13 32 49 10 62 1c5 23-3 47-19 61 20 10 14 44-7 50-19 2-32-24-34-56Z" fill="url(#morphoGradR)" />
-            <path d="M2 56Q27 28 57 9M2 56Q33 40 47 56M2 56Q33 72 39 104M23 33Q41 22 53 28M20 74Q35 84 40 90" fill="none" stroke="rgba(0, 0, 0, 0.55)" strokeLinecap="round" strokeWidth="1.2" />
-            <circle cx="57" cy="18" r="1.3" fill="#fff" opacity="0.9" />
-            <circle cx="50" cy="42" r="1.3" fill="#fff" opacity="0.9" />
-            <circle cx="39" cy="88" r="1.3" fill="#fff" opacity="0.9" />
-          </svg>
+          <div className="butterfly-body" />
+
+          {/* Right Wing */}
+          <div className="wing-side right" id="wingR" ref={wingRRef}>
+            <svg className="wing-svg" viewBox="0 0 65 115" preserveAspectRatio="none">
+              <defs>
+                <radialGradient id="morphoGradR" cx="12%" cy="46%" r="85%">
+                  <stop offset="0%" stopColor="#70d6ff" />
+                  <stop offset="22%" stopColor="#0080ff" />
+                  <stop offset="58%" stopColor="#0038b8" />
+                  <stop offset="84%" stopColor="#001140" />
+                  <stop offset="100%" stopColor="#02040a" />
+                </radialGradient>
+              </defs>
+              <path
+                d="M 2 56 C 13 32, 49 10, 62 1 C 67 24, 59 48, 43 62 C 63 72, 57 106, 36 112 C 17 114, 4 88, 2 56 Z"
+                fill="url(#morphoGradR)"
+              />
+              <path
+                d="M 2 56 Q 27 28 57 9 M 2 56 Q 33 40 47 56 M 2 56 Q 33 72 39 104 M 23 33 Q 41 22 53 28 M 20 74 Q 35 84 40 90"
+                stroke="rgba(0, 0, 0, 0.55)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle cx="57" cy="18" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="50" cy="42" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="39" cy="88" r="1.3" fill="#ffffff" opacity="0.9" />
+              <circle cx="29" cy="106" r="1.1" fill="#ffffff" opacity="0.8" />
+            </svg>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
