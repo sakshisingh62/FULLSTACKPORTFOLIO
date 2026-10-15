@@ -9,16 +9,7 @@ export default function About() {
         <span className="section-label">Identity & Context</span>
         <h2 className="section-title">About Me</h2>
 
-        <div
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '2.5rem',
-            maxWidth: '900px',
-            margin: '0 auto',
-          }}
-        >
+        <div className="about-card">
           <p
             style={{
               fontSize: '1.15rem',
