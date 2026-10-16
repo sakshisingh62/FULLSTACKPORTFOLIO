@@ -21,7 +21,16 @@ import Footer from './components/Footer'
 import ProjectModal from './components/ProjectModal'
 
 function App() {
-  const { darkMode } = useStore()
+  const { darkMode, toggleDarkMode } = useStore()
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('theme') === 'light' && darkMode) {
+      toggleDarkMode()
+    } else if (params.get('theme') === 'dark' && !darkMode) {
+      toggleDarkMode()
+    }
+  }, [darkMode, toggleDarkMode])
 
   useEffect(() => {
     if (darkMode) {

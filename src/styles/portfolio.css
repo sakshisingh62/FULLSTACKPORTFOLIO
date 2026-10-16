@@ -2745,7 +2745,7 @@ input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
   transform: translateY(-3px);
   border-color: var(--accent-cyan);
   background: rgba(56, 189, 248, 0.12);
-  color: #ffffff;
+  color: var(--text-primary);
   box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
 }
 
@@ -2757,8 +2757,55 @@ input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
 
 .footer-resume-link {
   border-color: var(--accent-cyan);
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(129, 140, 248, 0.18) 100%);
+  color: var(--text-primary);
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+.footer-resume-link:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3) 0%, rgba(129, 140, 248, 0.3) 100%);
   color: #ffffff;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+}
+
+/* Light mode overrides for footer social links */
+html.light .footer-connect-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+}
+
+html.light .footer-social-link {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.04);
+  color: var(--text-secondary);
+}
+
+html.light .footer-social-link:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--text-primary);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.15);
+}
+
+html.light .footer-resume-link {
+  border-color: var(--accent-cyan);
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.12);
+}
+
+html.light .footer-resume-link:hover {
+  background: rgba(2, 132, 199, 0.22);
+  color: #0369a1;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+}
+
+html.light .footer-social-link svg {
+  color: var(--accent-cyan);
+  filter: none;
 }
 
 .footer-contact-details {
